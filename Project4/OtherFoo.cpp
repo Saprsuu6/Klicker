@@ -116,7 +116,7 @@ void KlickII(COUNT& count, UPGRADES_II& up_ii) {
 }
 
 void Klick(COUNT& count, UPGRADES& up, UPGRADES_II& up_ii) {
-    int press_colour = (int)COLOURS::WHITE;;
+    int press_colour = (int)COLOURS::WHITE;
     int count_buying = 0;
     int count_buying_ii = 0;
     bool temp = false;
