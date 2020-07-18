@@ -121,6 +121,8 @@ void Klick(COUNT& count, UPGRADES& up, UPGRADES_II& up_ii) {
     int count_buying_ii = 0;
     bool temp = false;
     int upgrades = 5;
+    up.str = new char[upgrades];
+    strcpy_s(up.str, upgrades, "+1");
     UPGRADES* up_ar = new UPGRADES[upgrades];
     up_ar = Upgrades(up);
     UPGRADES_II* up_ii_ar = new UPGRADES_II[upgrades];
@@ -134,15 +136,18 @@ void Klick(COUNT& count, UPGRADES& up, UPGRADES_II& up_ii) {
     INPUT_RECORD all_events[events];
     DWORD read_events;
     while (true) {
-        CheckToBuy(count, up_ar, up_ii_ar, count_buying, count_buying_ii);
+        if(!up_ar[count_buying].buying)
+            CheckToBuy(count, up_ar, up_ii_ar, count_buying, count_buying_ii);
+        else  
+            PrintBuy(34, 2, (int)COLOURS::CYAN);
         ReadConsoleInput(h_m, all_events, events, &read_events);
         for (int i = 0; i < read_events; i++) {
             mouse.X = all_events[i].Event.MouseEvent.dwMousePosition.X;
             mouse.Y = all_events[i].Event.MouseEvent.dwMousePosition.Y;
             if (all_events[i].Event.MouseEvent.dwButtonState == FROM_LEFT_1ST_BUTTON_PRESSED) {
                 if (mouse.X > 1 && mouse.X < 36 && mouse.Y > 13 && mouse.Y < 17) {
-                    count.Skin++;
-                    //PrintKlick(mouse, press_colour);
+                    count.Skin += up.count;
+                    PrintKlick(up, mouse, press_colour);
                     SetConsoleTextAttribute(h, press_colour);
                     PrintProgress(count);
                 }
@@ -165,6 +170,13 @@ void Klick(COUNT& count, UPGRADES& up, UPGRADES_II& up_ii) {
                         count_buying_ii--;
                         PrintUpgradesII(up_ii_ar, count_buying_ii);
                     }
+                }
+                if (mouse.X > 33 && mouse.X < 37 && mouse.Y == 2 && count.Skin >= up_ar[count_buying].price
+                    && !up_ar[count_buying].buying) {
+                    press_colour = up_ar[count_buying].colour;
+                    up.count = up_ar[count_buying].count;
+                    up.str = up_ar[count_buying].str;
+                    up_ar[count_buying].buying = true;
                 }
             }
         }
@@ -190,10 +202,10 @@ void PrintBuy(int x, int y, int colour) {
     cout << "Buy";
 }
 
-void PrintKlick(COORD mouse, int colour) {
+void PrintKlick(UPGRADES& up, COORD mouse, int colour) {
     SetConsoleCursorPosition(h, mouse);
     SetConsoleTextAttribute(h, colour);
-    cout << "+1";
+    cout << up.str;
     Sleep(100);
     SetConsoleCursorPosition(h, mouse);
     cout << "  ";
@@ -209,6 +221,7 @@ UPGRADES* Upgrades(UPGRADES& up) {
     int upgrades = 5;
     UPGRADES* up_ar = new UPGRADES[upgrades];
     for (int i = 0; i < upgrades; i++) {
+        up_ar[i].buying = false;
         up_ar[i].price = 1000 + (i * (1000 + i * 5000));
         up_ar[i].colour = rand() % 15 + 1;
         up_ar[i].count = 2 + i;
@@ -226,6 +239,7 @@ UPGRADES_II* UpgradesII(UPGRADES_II& up_ii) {
     int upgrades = 5;
     UPGRADES_II* up_ii_ar = new UPGRADES_II[upgrades];
     for (int i = 0; i < upgrades; i++) {
+        up_ii_ar[i].buying = false;
         up_ii_ar[i].price = 1000 + (i * (1000 + i * 5000));
         up_ii_ar[i].sleep = 1000 - (i * 200);
         up_ii_ar[i].temp = true;

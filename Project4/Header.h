@@ -18,9 +18,11 @@ struct UPGRADES {
     int colour;
     int count;
     char* str;
+    bool buying;
 };
 
 struct UPGRADES_II {
+    bool buying;
     bool temp;
     int price;
     int sleep;
@@ -33,7 +35,7 @@ void PrintProgress(COUNT& count);
 void KlickII(COUNT& count, UPGRADES_II& up_ii);
 void Klick(COUNT& count, UPGRADES& up, UPGRADES_II& up_ii);
 void Streams(COUNT& count, UPGRADES& up, UPGRADES_II& up_ii);
-void PrintKlick(COORD mouse, int colour);
+void PrintKlick(UPGRADES& up, COORD mouse, int colour);
 void PrintUpgrades(UPGRADES*& up, int count);
 void PrintUpgradesII(UPGRADES_II*& up_ii, int count);
 UPGRADES* Upgrades(UPGRADES& up);
