@@ -43,3 +43,4 @@ UPGRADES_II* UpgradesII(UPGRADES_II& up_ii);
 void PrintBuy(int x, int y, int colour);
 void CheckToBuy(COUNT& count, UPGRADES*& up_ar, UPGRADES_II*& up_ii_ar,
     int count_buying, int count_buying_i);
+void CheckToPlus(COUNT& count);

@@ -101,14 +101,7 @@ void KlickII(COUNT& count, UPGRADES_II& up_ii) {
     while (true) {
         if (up_ii.temp) {
             count.Skin++;
-            if (count.Skin > 1000)
-                count.Iron++;
-            else if (count.Iron > 30000)
-                count.Gold;
-            else if (count.Gold > 50000)
-                count.Diamond++;
-            else if (count.Diamond > 100000)
-                count.Ruby++;
+            CheckToPlus(count);
             PrintProgress(count);
             Sleep(up_ii.sleep);
         }
@@ -136,30 +129,23 @@ void Klick(COUNT& count, UPGRADES& up, UPGRADES_II& up_ii) {
     INPUT_RECORD all_events[events];
     DWORD read_events;
     while (true) {
-        if (!up_ar[count_buying].buying /*&& !up_ii_ar[count_buying_ii].buying*/)
+        if (!up_ar[count_buying].buying && !up_ii_ar[count_buying_ii].buying)
             CheckToBuy(count, up_ar, up_ii_ar, count_buying, count_buying_ii);
-        /*else if (up_ar[count_buying].buying)
+        if (up_ar[count_buying].buying)
             PrintBuy(34, 2, (int)COLOURS::CYAN);
-        else if (up_ii_ar[count_buying_ii].buying)
+        /*if (up_ii_ar[count_buying_ii].buying)
             PrintBuy(34, 4, (int)COLOURS::CYAN);*/
         ReadConsoleInput(h_m, all_events, events, &read_events);
         for (int i = 0; i < read_events; i++) {
             mouse.X = all_events[i].Event.MouseEvent.dwMousePosition.X;
             mouse.Y = all_events[i].Event.MouseEvent.dwMousePosition.Y;
-            if (all_events[i].Event.MouseEvent.dwButtonState == FROM_LEFT_1ST_BUTTON_PRESSED) {
+            if (all_events[i].Event.MouseEvent.dwButtonState == FROM_LEFT_1ST_BUTTON_PRESSED 
+                || all_events[i].Event.MouseEvent.dwButtonState == RIGHTMOST_BUTTON_PRESSED) {
                 if (mouse.X > 1 && mouse.X < 36 && mouse.Y > 13 && mouse.Y < 17) {
                     count.Skin += up.count;
                     PrintKlick(up, mouse, press_colour);
                     SetConsoleTextAttribute(h, press_colour);
-                    PrintProgress(count);
-                    if (count.Skin > 1000)
-                        count.Iron++;
-                    else if (count.Iron > 30000)
-                        count.Gold;
-                    else if (count.Gold > 50000)
-                        count.Diamond++;
-                    else if (count.Diamond > 100000)
-                        count.Ruby++;
+                    CheckToPlus(count);
                 }
                 if (mouse.Y == 2) {
                     if (mouse.X == 32 && count_buying < 4) {
@@ -194,9 +180,21 @@ void Klick(COUNT& count, UPGRADES& up, UPGRADES_II& up_ii) {
                     up_ii.sleep = up_ii_ar[count_buying_ii].sleep;
                     up_ii_ar[count_buying_ii].buying = true;
                 }
+                PrintProgress(count);
             }
         }
     }
+}
+
+void CheckToPlus(COUNT& count) {
+    if (count.Skin > 1000)
+        count.Iron++;
+    else if (count.Iron > 30000)
+        count.Gold;
+    else if (count.Gold > 50000)
+        count.Diamond++;
+    else if (count.Diamond > 100000)
+        count.Ruby++;
 }
 
 void CheckToBuy(COUNT& count, UPGRADES*& up_ar, UPGRADES_II*& up_ii_ar, 
@@ -222,7 +220,7 @@ void PrintKlick(UPGRADES& up, COORD mouse, int colour) {
     SetConsoleCursorPosition(h, mouse);
     SetConsoleTextAttribute(h, colour);
     cout << up.str;
-    Sleep(10);
+    Sleep(50);
     SetConsoleCursorPosition(h, mouse);
     cout << "  ";
 }
