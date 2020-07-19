@@ -131,15 +131,15 @@ void Klick(COUNT& count, UPGRADES& up, UPGRADES_II& up_ii) {
     while (true) {
         if (!up_ar[count_buying].buying && !up_ii_ar[count_buying_ii].buying)
             CheckToBuy(count, up_ar, up_ii_ar, count_buying, count_buying_ii);
-        if (up_ar[count_buying].buying)
+        else if (up_ar[count_buying].buying)
             PrintBuy(34, 2, (int)COLOURS::CYAN);
-        /*if (up_ii_ar[count_buying_ii].buying)
-            PrintBuy(34, 4, (int)COLOURS::CYAN);*/
+        else if (up_ii_ar[count_buying_ii].buying)
+            PrintBuy(34, 4, (int)COLOURS::CYAN);
         ReadConsoleInput(h_m, all_events, events, &read_events);
         for (int i = 0; i < read_events; i++) {
             mouse.X = all_events[i].Event.MouseEvent.dwMousePosition.X;
             mouse.Y = all_events[i].Event.MouseEvent.dwMousePosition.Y;
-            if (all_events[i].Event.MouseEvent.dwButtonState == FROM_LEFT_1ST_BUTTON_PRESSED 
+            if (all_events[i].Event.MouseEvent.dwButtonState == FROM_LEFT_1ST_BUTTON_PRESSED
                 || all_events[i].Event.MouseEvent.dwButtonState == RIGHTMOST_BUTTON_PRESSED) {
                 if (mouse.X > 1 && mouse.X < 36 && mouse.Y > 13 && mouse.Y < 17) {
                     count.Skin += up.count;
@@ -220,7 +220,7 @@ void PrintKlick(UPGRADES& up, COORD mouse, int colour) {
     SetConsoleCursorPosition(h, mouse);
     SetConsoleTextAttribute(h, colour);
     cout << up.str;
-    Sleep(50);
+    //Sleep(50);
     SetConsoleCursorPosition(h, mouse);
     cout << "  ";
 }
