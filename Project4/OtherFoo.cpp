@@ -99,7 +99,7 @@ void PrintProgress(COUNT& count) {
 
 void KlickII(COUNT& count, UPGRADES_II& up_ii) {
     while (true) {
-        if (up_ii.temp) {
+        if (up_ii.temp) {;
             count.Skin++;
             CheckToPlus(count);
             PrintProgress(count);
